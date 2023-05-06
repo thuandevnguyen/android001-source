@@ -277,4 +277,6 @@ obj/
 
 !/gradle/wrapper/gradle-wrapper.jar
 
+.DS_Store
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,android,androidstudio,java,kotlin
