@@ -2,16 +2,20 @@ package com.example.demobuoi4
 
 import android.Manifest
 import android.content.ComponentName
+import android.content.ContentValues
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.ContactsContract
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.database.getIntOrNull
+import androidx.core.database.getStringOrNull
 import com.example.demobuoi4.SecondActivity.Companion.RESULT_HELLO
 import com.example.demobuoi4.databinding.ActivityMainBinding
 
@@ -36,6 +40,30 @@ class MainActivity : AppCompatActivity() {
             bound = false
         }
     }
+    private val myContentObserver = MyContentObserver {
+        val cursor = contentResolver.query(
+            /* uri = */ StudentsProvider.CONTENT_URI,
+            /* projection = */ arrayOf(DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_AGE),
+            /* selection = */  null,
+            /* selectionArgs = */null,
+            /* sortOrder = */ "${DatabaseHelper.COLUMN_ID} ASC"
+        )
+
+        cursor?.use {
+            val s = StringBuilder()
+
+            if (it.count > 0) {
+                while (it.moveToNext()) {
+                    val id = it.getStringOrNull(it.getColumnIndex(DatabaseHelper.COLUMN_ID))
+                    val name = it.getStringOrNull(it.getColumnIndex(DatabaseHelper.COLUMN_NAME))
+                    val age = it.getIntOrNull(it.getColumnIndex(DatabaseHelper.COLUMN_AGE))
+                    s.append("id=$id, name=$name, age=$age\n")
+                }
+            }
+
+            Log.d(TAG, s.toString())
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +71,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         Log.d(TAG, "onCreate")
-//        findViewById<TextView>(R.id.tvIncrement).setOnClickListener {
-//            count++
+        //        findViewById<TextView>(R.id.tvIncrement).setOnClickListener {
+        //            count++
         //            updateCounter()
         //        }
         binding.tvIncrement.setOnClickListener {
-//            val intent = Intent(this, SecondActivity::class.java)
-//            val data = "Hello Second Activity 1234"
-//            val bundle = Bundle()
-//            bundle.putString("Hello", data)
-//            intent.putExtras(bundle)
-//            resultLauncherActivity.launch(intent)
-            resultLauncherActivityRequestPermission.launch(Manifest.permission.RECEIVE_SMS)
+            //            val intent = Intent(this, SecondActivity::class.java)
+            //            val data = "Hello Second Activity 1234"
+            //            val bundle = Bundle()
+            //            bundle.putString("Hello", data)
+            //            intent.putExtras(bundle)
+            //            resultLauncherActivity.launch(intent)
+
+            //            resultLauncherActivityRequestPermission.launch(Manifest.permission.RECEIVE_SMS)
+            contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
         }
 
         binding.buttonStartService.setOnClickListener {
@@ -70,9 +100,57 @@ class MainActivity : AppCompatActivity() {
             stopService(Intent(this, HelloForegroundService::class.java))
         }
 
+        var index = 0
         binding.button3.setOnClickListener {
             helloBoundService?.getData()
+            contentResolver.insert(
+                StudentsProvider.CONTENT_URI,
+                ContentValues().apply {
+                    put(DatabaseHelper.COLUMN_NAME, "Hoc $index++")
+                    put(DatabaseHelper.COLUMN_AGE, 25)
+                }
+            )
         }
+
+        contentResolver.registerContentObserver(
+            StudentsProvider.CONTENT_URI,
+            true,
+            myContentObserver
+        )
+
+        // su dung o app khac
+        //        contentResolver.insert(
+        //            Uri.parse("content://com.example.demobuoi4.provider/students"),
+        //            ContentValues().apply {
+        //                put("name", "Hoc $index++")
+        //                put("age", 25)
+        //            }
+        //        )
+    }
+
+    private fun readContacts() {
+        val cursor = contentResolver.query(
+            /* uri = */ ContactsContract.Contacts.CONTENT_URI,
+            /* projection = */ arrayOf(ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME),
+            /* selection = */ "${ContactsContract.Contacts.DISPLAY_NAME} LIKE ?",
+            /* selectionArgs = */ arrayOf("A%"),
+            /* sortOrder = */ "${ContactsContract.Contacts.DISPLAY_NAME} ASC"
+        )
+
+        cursor?.use {
+            val s = StringBuilder()
+
+            if (it.count > 0) {
+                while (it.moveToNext()) {
+                    val id = it.getStringOrNull(it.getColumnIndex(ContactsContract.Contacts._ID))
+                    val name = it.getStringOrNull(it.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    s.append("id=$id, name=$name\n")
+                }
+            }
+
+            binding.textViewContacts.text = s
+        }
+
     }
 
     private var resultLauncherActivity =
@@ -91,6 +169,17 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Chua co quyen", Toast.LENGTH_LONG).show()
             }
         }
+
+    private var contactsPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            if (result) {
+                readContacts()
+                Toast.makeText(this, "Da co quyen", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Chua co quyen", Toast.LENGTH_LONG).show()
+            }
+        }
+
 
     private fun updateCounter() {
         findViewById<TextView>(R.id.tvCount).text = count.toString()

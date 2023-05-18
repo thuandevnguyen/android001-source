@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".MyApp"
@@ -45,16 +46,22 @@
             android:name=".HelloBoundService"
             android:exported="false" />
 
-        <receiver android:name=".SmsReceiver"
+        <receiver
+            android:name=".SmsReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
 
-            <intent-filter >
+            <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
 
         </receiver>
+
+        <provider
+            android:name=".StudentsProvider"
+            android:authorities="com.example.demobuoi4.provider"
+            android:exported="true" />
 
     </application>
 
