@@ -7,23 +7,11 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/closeActivity"
+        android:id="@+id/tvNumberPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="closeActivity"
-        app:layout_constraintBottom_toTopOf="@+id/tvCount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/tvCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="NumberPhone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,9 +19,11 @@
         android:id="@+id/tvContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCount" />
+        app:layout_constraintTop_toBottomOf="@+id/tvNumberPhone" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

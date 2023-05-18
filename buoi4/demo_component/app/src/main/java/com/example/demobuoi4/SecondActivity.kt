@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.demobuoi4.SmsReceiver.Companion.CONTENT_MESSAGE
+import com.example.demobuoi4.SmsReceiver.Companion.NUMBER_PHONE
 import com.example.demobuoi4.databinding.ActivitySecondBinding
 
 class SecondActivity : AppCompatActivity() {
@@ -18,16 +20,24 @@ class SecondActivity : AppCompatActivity() {
 
 //        val message = intent.getStringExtra("message")
 
-        val bundleReceive = intent.extras
-        val datas = bundleReceive?.getString("Hello")
-        binding.tvContent.text = datas
+//        val bundleReceive = intent.extras
+//        val datas = bundleReceive?.getString("Hello")
+//        binding.tvContent.text = datas
+//
+//        binding.closeActivity.setOnClickListener {
+//            val data = "Result from Activity 2"
+//            val resultIntent = Intent()
+//            resultIntent.putExtra("result", data)
+//            setResult(RESULT_HELLO, resultIntent)
+//            finish()
+//        }
 
-        binding.closeActivity.setOnClickListener {
-            val data = "Result from Activity 2"
-            val resultIntent = Intent()
-            resultIntent.putExtra("result", data)
-            setResult(RESULT_HELLO, resultIntent)
-            finish()
+        val numberPhone = intent.getStringExtra(NUMBER_PHONE)
+        val contentMessage = intent.getStringExtra(CONTENT_MESSAGE)
+
+        binding.apply {
+            tvNumberPhone.text = numberPhone
+            tvContent.text = contentMessage
         }
     }
 

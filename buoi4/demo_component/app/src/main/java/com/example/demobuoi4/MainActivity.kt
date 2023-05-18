@@ -1,5 +1,6 @@
 package com.example.demobuoi4
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -47,12 +48,13 @@ class MainActivity : AppCompatActivity() {
         //            updateCounter()
         //        }
         binding.tvIncrement.setOnClickListener {
-            val intent = Intent(this, SecondActivity::class.java)
-            val data = "Hello Second Activity 1234"
-            val bundle = Bundle()
-            bundle.putString("Hello", data)
-            intent.putExtras(bundle)
-            resultLauncherActivity.launch(intent)
+//            val intent = Intent(this, SecondActivity::class.java)
+//            val data = "Hello Second Activity 1234"
+//            val bundle = Bundle()
+//            bundle.putString("Hello", data)
+//            intent.putExtras(bundle)
+//            resultLauncherActivity.launch(intent)
+            resultLauncherActivityRequestPermission.launch(Manifest.permission.RECEIVE_SMS)
         }
 
         binding.buttonStartService.setOnClickListener {
@@ -79,6 +81,14 @@ class MainActivity : AppCompatActivity() {
                 val dataReceive = result.data
                 val resultData = dataReceive?.getStringExtra("result")
                 Toast.makeText(this, resultData, Toast.LENGTH_LONG).show()
+            }
+        }
+    private var resultLauncherActivityRequestPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+            if (result) {
+                Toast.makeText(this, "Da co quyen", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Chua co quyen", Toast.LENGTH_LONG).show()
             }
         }
 
