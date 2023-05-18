@@ -1,12 +1,16 @@
 package com.example.demobuoi4
 
+import android.content.ComponentName
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.demobuoi4.SecondActivity.Companion.RESULT_HELLO
 import com.example.demobuoi4.databinding.ActivityMainBinding
 
@@ -16,6 +20,22 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var helloBoundService: HelloBoundService? = null
+    private var bound = false
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val localBinder = service as HelloBoundService.LocalBinder
+
+            helloBoundService = localBinder.getHelloBoundService()
+            bound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            helloBoundService = null
+            bound = false
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -24,15 +44,32 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate")
 //        findViewById<TextView>(R.id.tvIncrement).setOnClickListener {
 //            count++
-//            updateCounter()
-//        }
+        //            updateCounter()
+        //        }
         binding.tvIncrement.setOnClickListener {
             val intent = Intent(this, SecondActivity::class.java)
             val data = "Hello Second Activity 1234"
             val bundle = Bundle()
-            bundle.putString("Hello",data)
+            bundle.putString("Hello", data)
             intent.putExtras(bundle)
             resultLauncherActivity.launch(intent)
+        }
+
+        binding.buttonStartService.setOnClickListener {
+            ContextCompat.startForegroundService(
+                this,
+                Intent(this, HelloForegroundService::class.java).apply {
+                    putExtra(HelloForegroundService.EXTRA_ACTION_KEY, "START")
+                }
+            )
+        }
+
+        binding.buttonStopService.setOnClickListener {
+            stopService(Intent(this, HelloForegroundService::class.java))
+        }
+
+        binding.button3.setOnClickListener {
+            helloBoundService?.getData()
         }
     }
 
@@ -68,6 +105,14 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "onStart")
+
+        val boundIntent = Intent(this, HelloBoundService::class.java)
+        bindService(
+            /* service = */ boundIntent,
+            /* conn = */ connection,
+            /* flags = */ 0
+        )
+        startService(boundIntent)
     }
 
     override fun onResume() {
@@ -83,11 +128,18 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop")
+
+        if (bound) {
+            unbindService(connection)
+            bound = false
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy")
+
+        stopService(Intent(this, HelloBoundService::class.java))
     }
 
     companion object {
