@@ -36,15 +36,15 @@ class FirstFragment : BaseFragment() {
         requireActivity().supportFragmentManager.commit {
           setReorderingAllowed(true)
 
-          replace<SecondFragment>(
-            containerViewId = R.id.container,
-            tag = "SecondFragment",
-            args = bundleOf(
-              "key1" to 1,
-              "key2" to "hello",
-              "key3" to arrayListOf("1", "2", "3")
-            ),
-          )
+//          replace<SecondFragment>(
+//            containerViewId = R.id.container,
+//            tag = "SecondFragment",
+//            args = bundleOf(
+//              "key1" to 1,
+//              "key2" to "hello",
+//              "key3" to arrayListOf("1", "2", "3")
+//            ),
+//          )
 
           addToBackStack("TO_SECOND")
         }
