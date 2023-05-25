@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+apply from: '../autodimension.gradle'
+
 android {
     namespace 'com.example.demobuoi5'
     compileSdk 33
