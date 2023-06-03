@@ -15,13 +15,11 @@ import kotlin.random.Random
 
 class PreferencesViewModel(application: Application) : AndroidViewModel(application) {
   private val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-  private val listener = object : SharedPreferences.OnSharedPreferenceChangeListener {
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-      _allData.value = sharedPreferences?.all ?: emptyMap()
-    }
+  private val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, _ ->
+    _allData.value = sharedPreferences?.all.orEmpty()
   }
 
-  private val _allData = MutableLiveData(mapOf<String, Any?>())
+  private val _allData = MutableLiveData(emptyMap<String, Any?>())
   val allData: LiveData<Map<String, Any?>> get() = _allData
 
   init {
