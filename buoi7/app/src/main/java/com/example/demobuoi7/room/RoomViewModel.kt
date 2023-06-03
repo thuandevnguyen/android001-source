@@ -1,7 +1,7 @@
 package com.example.demobuoi7.room
 
 import android.app.Application
-import android.view.View
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.withTransaction
 import com.example.demobuoi7.room.daos.UserAndNotes
 import com.example.demobuoi7.room.entities.NoteEntity
-import com.example.demobuoi7.room.entities.UserEntity
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -18,6 +18,17 @@ class RoomViewModel(application: Application) : AndroidViewModel(application) {
     .getInstance(application)
     .noteDao()
     .observeAllByUserId(userId = 1)
+
+  init {
+    viewModelScope.coroutineContext.job.invokeOnCompletion {
+      Log.d("RoomViewModel", it.toString())
+    }
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    Log.d("RoomViewModel", "onCleared")
+  }
 
   fun addNewData() {
     val appDatabase = AppDatabase
