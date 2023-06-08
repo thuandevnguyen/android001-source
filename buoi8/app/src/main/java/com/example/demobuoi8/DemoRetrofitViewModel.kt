@@ -1,7 +1,8 @@
 package com.example.demobuoi8
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.demobuoi8.model.PostModel
 import com.example.demobuoi8.model.TodoResponse
@@ -11,7 +12,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DemoRetrofitViewModel(private val mockApi: MockApi = mockApi()) : ViewModel() {
+class DemoRetrofitViewModel(application: Application) : AndroidViewModel(application) {
+    private val mockApi = getApplication<Application>().mockApi()
 
     private val _liveDataTodo: MutableLiveData<TodoUiState> = MutableLiveData()
     val liveDataTodo get() = _liveDataTodo
@@ -19,7 +21,7 @@ class DemoRetrofitViewModel(private val mockApi: MockApi = mockApi()) : ViewMode
     private var getApiTodoExample: Call<TodoResponse>? = null
 
 
-    fun postApi(request : PostModel) {
+    fun postApi(request: PostModel) {
         viewModelScope.launch {
             _liveDataTodo.value = TodoUiState.Loading
             try {
