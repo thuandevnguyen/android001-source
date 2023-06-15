@@ -68,6 +68,63 @@ class CollectionsViewModel(
     }
   }
 
+  fun loadNextPage() {
+    val currentState = _uiStateLiveData.value
+    if (currentState !is CollectionsUiState.Page) {
+      // ignore
+      return
+    }
+
+    if (!currentState.isLoading
+      && currentState.error == null
+      && currentState.pageNumber >= 1
+      && currentState.items.isNotEmpty()
+    ) {
+
+      _uiStateLiveData.update {
+        currentState.copy(
+          isLoading = true
+        )
+      }
+      val newPageNumber = currentState.pageNumber + 1
+
+      viewModelScope.launch {
+        try {
+          val newPageItems = unsplashApiService.getCollections(
+            page = newPageNumber,
+            perPage = PER_PAGE
+          )
+          Log.d(TAG, "loadNextPage: success")
+
+          _uiStateLiveData.update {
+            currentState.copy(
+              pageNumber = newPageNumber,
+              items = (currentState.items + newPageItems.map { it.toCollectionUiItem() })
+                .distinctBy { it.id },
+              isLoading = false,
+              error = null,
+            )
+          }
+        } catch (e: CancellationException) {
+          throw e
+        } catch (e: Throwable) {
+          Log.e(TAG, "loadNextPage: failed", e)
+
+          _uiStateLiveData.update {
+            currentState.copy(
+              isLoading = false,
+              error = e,
+            )
+          }
+        }
+      }
+    }
+  }
+
+  fun retry() {
+    TODO("Not yet implemented")
+  }
+
   companion object {
     private const val TAG = "CollectionsViewModel"
     private const val PER_PAGE = 30

@@ -125,85 +125,85 @@ data class CollectionListResponseItem(
           @Keep
           data class Athletics(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2021-01-13T14:55:28Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2021-01-13T14:55:28Z
           )
 
           @Keep
           data class Health(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:25Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:25Z
           )
 
           @Keep
           data class People(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:24Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:24Z
           )
 
           @Keep
           data class Wallpapers(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:10Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:10Z
           )
 
           @Keep
           data class Nature(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:12Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:12Z
           )
 
           @Keep
           data class ArchitectureInterior(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:14Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:14Z
           )
 
           @Keep
           data class ColorOfWater(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2022-04-21T15:04:21Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2022-04-21T15:04:21Z
           )
 
           @Keep
           data class TexturesPatterns(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:11Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:11Z
           )
 
           @Keep
           data class CurrentEvents(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2021-03-01T12:52:57Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2021-03-01T12:52:57Z
           )
 
           @Keep
           data class Spirituality(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:22Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:22Z
           )
 
           @Keep
           data class Experimental(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:23Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:23Z
           )
 
           @Keep
           data class ArtsCulture(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-04-06T14:20:25Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-04-06T14:20:25Z
           )
 
           @Keep
           data class BusinessWork(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2021-08-18T15:18:17Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2021-08-18T15:18:17Z
           )
 
           @Keep
           data class Animals(
             @Json(name = "status") val status: String, // approved
-            @Json(name = "approved_on") val approvedOn: String // 2020-06-03T13:38:01Z
+            @Json(name = "approved_on") val approvedOn: String? = null // 2020-06-03T13:38:01Z
           )
         }
 
@@ -214,7 +214,7 @@ data class CollectionListResponseItem(
           @Json(name = "username") val username: String, // serenarepice
           @Json(name = "name") val name: String, // Serena Repice Lentini
           @Json(name = "first_name") val firstName: String, // Serena
-          @Json(name = "last_name") val lastName: String?, // Repice Lentini
+          @Json(name = "last_name") val lastName: String? = null, // Repice Lentini
           @Json(name = "twitter_username") val twitterUsername: String?, // serenarepice
           @Json(name = "portfolio_url") val portfolioUrl: String?, // https://www.instagram.com/serenarepice/
           @Json(name = "bio") val bio: String?, // Photographer based in Rome //Follow on Instagram for more @serenarepice
@@ -274,7 +274,7 @@ data class CollectionListResponseItem(
     @Json(name = "username") val username: String, // unsplashplus
     @Json(name = "name") val name: String, // Unsplash+ Collections
     @Json(name = "first_name") val firstName: String, // Unsplash+
-    @Json(name = "last_name") val lastName: String, // Collections
+    @Json(name = "last_name") val lastName: String? = null, // Collections
     @Json(name = "twitter_username") val twitterUsername: String?, // inky_pixels
     @Json(name = "portfolio_url") val portfolioUrl: String?, // http://inkypixelsdesign.com
     @Json(name = "bio") val bio: String?, // saved by grace // UX Design Manager // hobby photographer
@@ -377,37 +377,37 @@ data class CollectionListResponseItem(
       @Keep
       data class ArtsCulture(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2021-02-05T15:53:47Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2021-02-05T15:53:47Z
       )
 
       @Keep
       data class BusinessWork(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2022-08-05T10:00:38Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2022-08-05T10:00:38Z
       )
 
       @Keep
       data class ArchitectureInterior(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2021-09-28T19:05:43Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2021-09-28T19:05:43Z
       )
 
       @Keep
       data class Interiors(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2021-09-07T13:01:39Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2021-09-07T13:01:39Z
       )
 
       @Keep
       data class Health(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2020-10-23T10:37:20Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2020-10-23T10:37:20Z
       )
 
       @Keep
       data class Athletics(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2020-10-23T10:37:06Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2020-10-23T10:37:06Z
       )
 
       @Keep
@@ -428,13 +428,13 @@ data class CollectionListResponseItem(
       @Keep
       data class TexturesPatterns(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2020-05-08T09:45:00Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2020-05-08T09:45:00Z
       )
 
       @Keep
       data class Experimental(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2021-02-22T11:35:51Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2021-02-22T11:35:51Z
       )
 
       @Keep
@@ -445,7 +445,7 @@ data class CollectionListResponseItem(
       @Keep
       data class Animals(
         @Json(name = "status") val status: String, // approved
-        @Json(name = "approved_on") val approvedOn: String // 2022-05-27T13:46:38Z
+        @Json(name = "approved_on") val approvedOn: String? = null // 2022-05-27T13:46:38Z
       )
 
       @Keep
@@ -466,7 +466,7 @@ data class CollectionListResponseItem(
       @Json(name = "username") val username: String, // yunustug
       @Json(name = "name") val name: String, // Yunus Tuğ
       @Json(name = "first_name") val firstName: String, // Yunus
-      @Json(name = "last_name") val lastName: String?, // Tuğ
+      @Json(name = "last_name") val lastName: String? = null, // Tuğ
       @Json(name = "twitter_username") val twitterUsername: String?, // bumpyshot
       @Json(name = "portfolio_url") val portfolioUrl: String?, // https://bio.link/yunustug
       @Json(name = "bio") val bio: String?, // Freelance Photographer

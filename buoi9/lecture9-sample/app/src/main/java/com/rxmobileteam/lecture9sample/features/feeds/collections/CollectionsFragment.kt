@@ -1,10 +1,13 @@
 package com.rxmobileteam.lecture9sample.features.feeds.collections
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.rxmobileteam.lecture9sample.GlideApp
 import com.rxmobileteam.lecture9sample.base.BaseFragment
 import com.rxmobileteam.lecture9sample.databinding.FragmentCollectionsBinding
@@ -29,8 +32,29 @@ class CollectionsFragment : BaseFragment<FragmentCollectionsBinding>(FragmentCol
   }
 
   private fun bindVM() {
+    val layoutManager = binding.recyclerCollections.layoutManager as LinearLayoutManager
+
+    binding.recyclerCollections.addOnScrollListener(object : OnScrollListener() {
+      override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        super.onScrolled(recyclerView, dx, dy)
+        // Log.d(TAG, "dy=$dy, ${layoutManager.findLastVisibleItemPosition()}, ${layoutManager.itemCount}")
+
+        if (
+          dy > 0
+          && layoutManager.findLastVisibleItemPosition() + VISIBLE_THRESHOLD >= layoutManager.itemCount
+        ) {
+          Log.d(TAG, "loadNextPage...")
+          viewModel.loadNextPage()
+        }
+      }
+    })
+
+    binding.button.setOnClickListener {
+      viewModel.retry()
+    }
+
     viewModel.uiStateLiveData.observe(viewLifecycleOwner) { uiState ->
-      when(uiState) {
+      when (uiState) {
         is CollectionsUiState.FirstPageFailure -> {
           collectionUiItemAdapter.submitList(emptyList())
 
@@ -40,6 +64,7 @@ class CollectionsFragment : BaseFragment<FragmentCollectionsBinding>(FragmentCol
             button.text = "First page failed. Retry"
           }
         }
+
         CollectionsUiState.FirstPageLoading -> {
           collectionUiItemAdapter.submitList(emptyList())
 
@@ -77,6 +102,10 @@ class CollectionsFragment : BaseFragment<FragmentCollectionsBinding>(FragmentCol
 
 
   companion object {
+    private const val TAG = "CollectionsFragment"
+
+    private const val VISIBLE_THRESHOLD = 1
+
     fun newInstance() = CollectionsFragment()
   }
 }
