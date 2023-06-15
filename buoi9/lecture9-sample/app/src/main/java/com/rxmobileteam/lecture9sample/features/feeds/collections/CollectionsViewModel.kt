@@ -1,7 +1,6 @@
 package com.rxmobileteam.lecture9sample.features.feeds.collections
 
 import android.util.Log
-import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,24 +10,16 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.rxmobileteam.lecture9sample.ServiceLocator
 import com.rxmobileteam.lecture9sample.data.remote.UnsplashApiService
 import com.rxmobileteam.lecture9sample.data.remote.response.CollectionListResponseItem
+import com.rxmobileteam.lecture9sample.extensions.update
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
-@MainThread
-inline fun <T : Any> MutableLiveData<T>.update(f: (T) -> T): T {
-  check(isInitialized)
-  val current = this.value as T
-
-  val updated = f(current)
-  this.value = updated
-
-  return updated
-}
 
 class CollectionsViewModel(
   private val unsplashApiService: UnsplashApiService
 ) : ViewModel() {
-  private val _uiStateLiveData = MutableLiveData<CollectionsUiState>(CollectionsUiState.FirstPageLoading)
+  private val _uiStateLiveData =
+    MutableLiveData<CollectionsUiState>(CollectionsUiState.FirstPageLoading)
 
   val uiStateLiveData: LiveData<CollectionsUiState> get() = _uiStateLiveData
 

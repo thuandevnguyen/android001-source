@@ -9,30 +9,30 @@ import com.rxmobileteam.lecture9sample.databinding.FragmentFeedsBinding
 import com.rxmobileteam.lecture9sample.features.search.SearchActivity
 
 class FeedsFragment : BaseFragment<FragmentFeedsBinding>(FragmentFeedsBinding::inflate) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupViewPagerAndTabs()
-        binding.btnSearch.setOnClickListener {
-            Intent(requireContext(), SearchActivity::class.java).apply {
-                startActivity(this)
-            }
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setupViewPagerAndTabs()
+    binding.btnSearch.setOnClickListener {
+      Intent(requireContext(), SearchActivity::class.java).apply {
+        startActivity(this)
+      }
     }
+  }
 
-    private fun setupViewPagerAndTabs() {
-        binding.run {
-            viewPager.adapter = FeedsViewPagerAdapter(this@FeedsFragment)
+  private fun setupViewPagerAndTabs() {
+    binding.run {
+      viewPager.adapter = FeedsViewPagerAdapter(this@FeedsFragment)
 
-            TabLayoutMediator(
-                tabsLayout,
-                viewPager
-            ) { tab, position ->
-                tab.text = when (position) {
-                    0 -> "Collections"
-                    1 -> "Photos"
-                    else -> error("Unknown position: $position")
-                }
-            }.attach()
+      TabLayoutMediator(
+        tabsLayout,
+        viewPager
+      ) { tab, position ->
+        tab.text = when (position) {
+          0 -> "Collections"
+          1 -> "Photos"
+          else -> error("Unknown position: $position")
         }
+      }.attach()
     }
+  }
 }

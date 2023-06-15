@@ -13,7 +13,8 @@ import com.rxmobileteam.lecture9sample.base.BaseFragment
 import com.rxmobileteam.lecture9sample.databinding.FragmentCollectionsBinding
 import kotlin.LazyThreadSafetyMode.NONE
 
-class CollectionsFragment : BaseFragment<FragmentCollectionsBinding>(FragmentCollectionsBinding::inflate) {
+class CollectionsFragment :
+  BaseFragment<FragmentCollectionsBinding>(FragmentCollectionsBinding::inflate) {
   private val viewModel by viewModels<CollectionsViewModel>(
     factoryProducer = CollectionsViewModel::factory
   )
@@ -73,6 +74,7 @@ class CollectionsFragment : BaseFragment<FragmentCollectionsBinding>(FragmentCol
             button.isVisible = false
           }
         }
+
         is CollectionsUiState.Page -> {
           collectionUiItemAdapter.submitList(uiState.items)
 

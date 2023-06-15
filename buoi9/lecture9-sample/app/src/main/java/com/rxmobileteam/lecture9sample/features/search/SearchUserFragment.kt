@@ -6,12 +6,12 @@ import com.rxmobileteam.lecture9sample.base.BaseFragment
 import com.rxmobileteam.lecture9sample.databinding.FragmentSearchUsersBinding
 
 class SearchUserFragment :
-    BaseFragment<FragmentSearchUsersBinding>(FragmentSearchUsersBinding::inflate) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
+  BaseFragment<FragmentSearchUsersBinding>(FragmentSearchUsersBinding::inflate) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+  }
 
-    companion object {
-        fun newInstance() = SearchUserFragment()
-    }
+  companion object {
+    fun newInstance() = SearchUserFragment()
+  }
 }

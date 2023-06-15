@@ -14,55 +14,55 @@ import com.rxmobileteam.lecture9sample.features.search.SearchManageAdapter.Compa
 
 class SearchActivity : AppCompatActivity() {
 
-    private val binding by lazy {
-        ActivitySearchBinding.inflate(layoutInflater)
-    }
+  private val binding by lazy {
+    ActivitySearchBinding.inflate(layoutInflater)
+  }
 
-    private val viewModel by viewModels<SearchViewModel>(
-        factoryProducer = {
-            viewModelFactory {
-                addInitializer(SearchViewModel::class) {
-                    SearchViewModel(unsplashApiService = ServiceLocator.unsplashApiService)
-                }
-            }
+  private val viewModel by viewModels<SearchViewModel>(
+    factoryProducer = {
+      viewModelFactory {
+        addInitializer(SearchViewModel::class) {
+          SearchViewModel(unsplashApiService = ServiceLocator.unsplashApiService)
         }
+      }
+    }
+  )
+
+  private val tabIndex by lazy {
+    mapOf(
+      TAB_PHOTOS to "Photo",
+      TAB_USERS to "Users"
     )
+  }
 
-    private val tabIndex by lazy {
-        mapOf(
-            TAB_PHOTOS to "Photo",
-            TAB_USERS to "Users"
-        )
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(binding.root)
+    setupAdapterTab()
+    setupSearchText()
+  }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
-        setupAdapterTab()
-        setupSearchText()
-    }
+  private fun setupSearchText() {
+    binding.searchEdt.addTextChangedListener(object : TextWatcher {
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-    private fun setupSearchText() {
-        binding.searchEdt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+      }
 
-            }
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+      }
 
-            }
+      override fun afterTextChanged(s: Editable?) {
+        viewModel.queryTextChange(s?.toString() ?: return)
+      }
+    })
+  }
 
-            override fun afterTextChanged(s: Editable?) {
-                viewModel.queryTextChange(s.toString())
-            }
-        })
-    }
-
-    private fun setupAdapterTab() = binding.apply {
-        val adapter = SearchManageAdapter(this@SearchActivity)
-        viewPager.adapter = adapter
-        TabLayoutMediator(tabLayout, viewPager) { tab, positon ->
-            tab.text = tabIndex[positon]
-        }.attach()
-    }
+  private fun setupAdapterTab() = binding.apply {
+    val adapter = SearchManageAdapter(this@SearchActivity)
+    viewPager.adapter = adapter
+    TabLayoutMediator(tabLayout, viewPager) { tab, positon ->
+      tab.text = tabIndex[positon]
+    }.attach()
+  }
 }
