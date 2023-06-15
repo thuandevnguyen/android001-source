@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rxmobileteam.lecture9sample.GlideApp
 import com.rxmobileteam.lecture9sample.base.BaseFragment
 import com.rxmobileteam.lecture9sample.databinding.FragmentCollectionsBinding
 import kotlin.LazyThreadSafetyMode.NONE
@@ -15,7 +16,9 @@ class CollectionsFragment : BaseFragment<FragmentCollectionsBinding>(FragmentCol
   )
 
   private val collectionUiItemAdapter by lazy(NONE) {
-    CollectionUiItemAdapter()
+    CollectionUiItemAdapter(
+      glide = GlideApp.with(this)
+    )
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

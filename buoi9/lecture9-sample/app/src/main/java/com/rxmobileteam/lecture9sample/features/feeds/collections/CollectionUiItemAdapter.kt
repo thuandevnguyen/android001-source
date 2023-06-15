@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.rxmobileteam.lecture9sample.GlideRequests
 import com.rxmobileteam.lecture9sample.databinding.CollectionItemLayoutBinding
 
 object CollectionUiItemDiffUtilCallback : DiffUtil.ItemCallback<CollectionUiItem>() {
@@ -15,7 +17,9 @@ object CollectionUiItemDiffUtilCallback : DiffUtil.ItemCallback<CollectionUiItem
     oldItem == newItem
 }
 
-class CollectionUiItemAdapter :
+class CollectionUiItemAdapter(
+  private val glide: GlideRequests
+) :
   ListAdapter<CollectionUiItem, CollectionUiItemAdapter.VH>(CollectionUiItemDiffUtilCallback) {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
@@ -35,6 +39,13 @@ class CollectionUiItemAdapter :
       binding.run {
         textViewTitle.text = item.title
         textViewDescription.text = item.description
+
+        glide
+          .load(item.coverUrl)
+          .fitCenter()
+          .centerCrop()
+          .transition(withCrossFade())
+          .into(imageView)
       }
     }
   }
