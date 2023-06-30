@@ -15,7 +15,7 @@ private fun demo2() {
         .doAfterSuccess {
             println(" doOnEach 1 Thread Run ${Thread.currentThread().name} Value ${it}")
         }
-//        .observeOn(AndroidSchedulers.mainThread)
+        .observeOn(Schedulers.newThread())
         .doAfterSuccess {
             println(" doOnEach 2 Thread Run ${Thread.currentThread().name} Value ${it}")
         }
