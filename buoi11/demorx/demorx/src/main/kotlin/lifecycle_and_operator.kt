@@ -8,7 +8,7 @@ fun main() {
 //    demo1()
 //    demo2()
 //    flatmapDemo()
-    demoMerge()
+//    demoMerge()
     Thread.sleep(10000L)
 }
 
