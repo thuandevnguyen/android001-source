@@ -2,12 +2,15 @@ package com.rxmobileteam.lecture9sample.features.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.rxmobileteam.lecture9sample.GlideApp
 import com.rxmobileteam.lecture9sample.base.BaseFragment
 import com.rxmobileteam.lecture9sample.databinding.FragmentSearchPhotosBinding
 import com.rxmobileteam.lecture9sample.extensions.setupVertically
 import com.rxmobileteam.lecture9sample.features.feeds.collections.CollectionUiItemAdapter
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class SearchPhotoFragment :
@@ -32,8 +35,17 @@ class SearchPhotoFragment :
     binding.recyclerViewSearchPhoto.setupVertically(
       collectionUiItemAdapter
     )
-    viewModel.resultSearchPhotos.observe(viewLifecycleOwner) {
-      collectionUiItemAdapter.submitList(it)
+
+//    viewModel.resultSearchPhotos.observe(viewLifecycleOwner) {
+//      collectionUiItemAdapter.submitList(it)
+//    }
+
+    viewLifecycleOwner.lifecycleScope.launch {
+      viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewModel.resultSearchPhotos.collect {
+          collectionUiItemAdapter.submitList(it)
+        }
+      }
     }
   }
 

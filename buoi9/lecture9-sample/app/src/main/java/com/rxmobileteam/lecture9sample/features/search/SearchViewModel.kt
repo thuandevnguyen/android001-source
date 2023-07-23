@@ -1,80 +1,125 @@
 package com.rxmobileteam.lecture9sample.features.search
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.rxmobileteam.lecture9sample.ServiceLocator
-import com.rxmobileteam.lecture9sample.data.remote.UnsplashApiService
 import com.rxmobileteam.lecture9sample.features.feeds.collections.CollectionUiItem
 import com.rxmobileteam.lecture9sample.features.search.repository.SearchRepository
-import com.rxmobileteam.lecture9sample.utils.debounce
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
-import io.reactivex.rxjava3.subjects.BehaviorSubject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class SearchViewModel(
   private val searchRepository: SearchRepository,
 ) : ViewModel() {
-  private val _querySubject = BehaviorSubject.createDefault("")
-  private val _resultSearchPhotos = MutableLiveData<List<CollectionUiItem>>(emptyList())
+  private val _queryStateFlow = MutableStateFlow("")
 
-  val resultSearchPhotos get() = _resultSearchPhotos
-
-  private val disposable = _querySubject
-    .debounce(600, TimeUnit.MILLISECONDS)
+  val resultSearchPhotos: StateFlow<List<CollectionUiItem>> = _queryStateFlow
+    .debounce(600)
     .filter { it.isNotBlank() }
     .distinctUntilChanged()
-    .switchMap { query ->
-      searchRepository
-        .searchPhotosRx(
-          query = query,
-          page = 1,
-          perPage = 10
+    .flatMapLatest { query ->
+      flow {
+        emit(
+          searchRepository.searchPhotos(
+            query = query,
+            page = 1,
+            perPage = 10,
+          )
         )
-        .toObservable()
-        .map { Result.success(it) }
-        .onErrorReturn { Result.failure(it) }
-    }
-    .subscribeOn(Schedulers.io())
-    .observeOn(AndroidSchedulers.mainThread())
-    .subscribeBy(
-      onNext = { result ->
-        result.fold(
-          onSuccess = { photosResult ->
-            _resultSearchPhotos.value = photosResult.results.map {
-              CollectionUiItem(
-                id = it.id,
-                title = it.description ?: "",
-                description = it.description ?: "",
-                coverUrl = it.urls.full
-              )
-            }
-          },
-          onFailure = { error ->
-            Log.e("SearchViewModel", "Error", error)
-          }
-        )
-      },
-      onError = { error ->
-        Log.e("SearchViewModel", "Error", error)
       }
+        .flowOn(Dispatchers.IO)
+        .map { Result.success(it) }
+        .catch { e -> emit(Result.failure(e)) }
+    }
+    .map { result ->
+      result.fold(
+        onSuccess = { photosResult ->
+          photosResult.results.map {
+            CollectionUiItem(
+              id = it.id,
+              title = it.description ?: "",
+              description = it.description ?: "",
+              coverUrl = it.urls.full
+            )
+          }
+        },
+        onFailure = { error ->
+          Log.e("SearchViewModel", "Error", error)
+          emptyList()
+        }
+      )
+    }
+    .stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.Lazily,
+      initialValue = emptyList(),
     )
 
+  //region RxJava
+  //  private val _querySubject = BehaviorSubject.createDefault("")
+//  private val _resultSearchPhotos = MutableLiveData<List<CollectionUiItem>>(emptyList())
+
+//  val resultSearchPhotos get() = _resultSearchPhotos
+//
+//  private val disposable = _querySubject
+//    .debounce(600, TimeUnit.MILLISECONDS)
+//    .filter { it.isNotBlank() }
+//    .distinctUntilChanged()
+//    .switchMap { query ->
+//      searchRepository
+//        .searchPhotosRx(
+//          query = query,
+//          page = 1,
+//          perPage = 10
+//        )
+//        .toObservable()
+//        .map { Result.success(it) }
+//        .onErrorReturn { Result.failure(it) }
+//    }
+//    .subscribeOn(Schedulers.io())
+//    .observeOn(AndroidSchedulers.mainThread())
+//    .subscribeBy(
+//      onNext = { result ->
+//        result.fold(
+//          onSuccess = { photosResult ->
+//            _resultSearchPhotos.value = photosResult.results.map {
+//              CollectionUiItem(
+//                id = it.id,
+//                title = it.description ?: "",
+//                description = it.description ?: "",
+//                coverUrl = it.urls.full
+//              )
+//            }
+//          },
+//          onFailure = { error ->
+//            Log.e("SearchViewModel", "Error", error)
+//          }
+//        )
+//      },
+//      onError = { error ->
+//        Log.e("SearchViewModel", "Error", error)
+//      }
+//    )
+  //endregion
+
   override fun onCleared() {
-    disposable.dispose()
+//    disposable.dispose()
     super.onCleared()
   }
 
-//  private val _queryLiveData = MutableLiveData<String>("")
+  //region LiveData
+  //  private val _queryLiveData = MutableLiveData<String>("")
 //
 //  val resultSearchPhotos = _queryLiveData
 //    .debounce(
@@ -104,10 +149,12 @@ class SearchViewModel(
 //        }
 //      }
 //    }
+  //endregion
 
   fun queryTextChange(query: String) {
 //    _queryLiveData.value = query
-    _querySubject.onNext(query)
+//    _querySubject.onNext(query)
+    _queryStateFlow.value = query
   }
 
   companion object {
