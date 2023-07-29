@@ -1,4 +1,4 @@
-package com.rxmobileteam.lecture9sample.features.feeds.collections
+package com.rxmobileteam.lecture9sample.features.feeds.collections.presentation
 
 sealed interface CollectionsUiState {
   object FirstPageLoading : CollectionsUiState

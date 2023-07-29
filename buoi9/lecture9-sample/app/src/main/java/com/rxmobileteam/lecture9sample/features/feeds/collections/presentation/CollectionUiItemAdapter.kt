@@ -1,4 +1,4 @@
-package com.rxmobileteam.lecture9sample.features.feeds.collections
+package com.rxmobileteam.lecture9sample.features.feeds.collections.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

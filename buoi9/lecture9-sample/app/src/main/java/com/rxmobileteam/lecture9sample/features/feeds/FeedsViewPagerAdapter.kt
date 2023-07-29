@@ -2,7 +2,7 @@ package com.rxmobileteam.lecture9sample.features.feeds
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.rxmobileteam.lecture9sample.features.feeds.collections.CollectionsFragment
+import com.rxmobileteam.lecture9sample.features.feeds.collections.presentation.CollectionsFragment
 import com.rxmobileteam.lecture9sample.features.feeds.photos.PhotosFragment
 
 class FeedsViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

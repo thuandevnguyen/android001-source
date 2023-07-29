@@ -1,22 +1,19 @@
-package com.rxmobileteam.lecture9sample.features.feeds.collections
+package com.rxmobileteam.lecture9sample.features.feeds.collections.presentation
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.rxmobileteam.lecture9sample.ServiceLocator
-import com.rxmobileteam.lecture9sample.data.remote.UnsplashApiService
-import com.rxmobileteam.lecture9sample.data.remote.response.CollectionListResponseItem
 import com.rxmobileteam.lecture9sample.extensions.update
+import com.rxmobileteam.lecture9sample.features.feeds.collections.domain.entity.UnsplashCollection
+import com.rxmobileteam.lecture9sample.features.feeds.collections.domain.usecase.GetSplashCollectionUseCase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 
 class CollectionsViewModel(
-  private val unsplashApiService: UnsplashApiService
+  private val getSplashCollectionUseCase: GetSplashCollectionUseCase,
 ) : ViewModel() {
   private val _uiStateLiveData =
     MutableLiveData<CollectionsUiState>(CollectionsUiState.FirstPageLoading)
@@ -32,7 +29,7 @@ class CollectionsViewModel(
       _uiStateLiveData.update { CollectionsUiState.FirstPageLoading }
 
       try {
-        val responses = unsplashApiService.getCollections(
+        val responses = getSplashCollectionUseCase(
           page = 1,
           perPage = PER_PAGE,
         )
@@ -59,7 +56,7 @@ class CollectionsViewModel(
     }
   }
 
-  fun loadNextPage() {
+  private fun loadNextPage() {
     val currentState = _uiStateLiveData.value
     if (currentState !is CollectionsUiState.Page) {
       // ignore
@@ -81,7 +78,7 @@ class CollectionsViewModel(
 
       viewModelScope.launch {
         try {
-          val newPageItems = unsplashApiService.getCollections(
+          val newPageItems = getSplashCollectionUseCase(
             page = newPageNumber,
             perPage = PER_PAGE
           )
@@ -112,27 +109,26 @@ class CollectionsViewModel(
     }
   }
 
-  fun retry() {
+  private fun retry() {
     TODO("Not yet implemented")
+  }
+
+  fun processIntent(intent: CollectionsViewIntent) {
+    when(intent) {
+      CollectionsViewIntent.LoadNextPage -> loadNextPage()
+      CollectionsViewIntent.Retry -> retry()
+    }
   }
 
   companion object {
     private const val TAG = "CollectionsViewModel"
     private const val PER_PAGE = 30
-
-    fun factory(): ViewModelProvider.Factory = viewModelFactory {
-      addInitializer(CollectionsViewModel::class) {
-        CollectionsViewModel(
-          unsplashApiService = ServiceLocator.unsplashApiService
-        )
-      }
-    }
   }
 }
 
-private fun CollectionListResponseItem.toCollectionUiItem(): CollectionUiItem = CollectionUiItem(
+private fun UnsplashCollection.toCollectionUiItem(): CollectionUiItem = CollectionUiItem(
   id = id,
   title = title,
   description = description.orEmpty(),
-  coverUrl = coverPhoto.urls.full,
+  coverUrl = coverUrl,
 )

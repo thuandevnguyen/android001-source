@@ -1,4 +1,4 @@
-package com.rxmobileteam.lecture9sample.features.feeds.collections
+package com.rxmobileteam.lecture9sample.features.feeds.collections.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.rxmobileteam.lecture9sample.GlideApp
 import com.rxmobileteam.lecture9sample.base.BaseFragment
 import com.rxmobileteam.lecture9sample.databinding.FragmentCollectionsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.LazyThreadSafetyMode.NONE
 
 class CollectionsFragment :
   BaseFragment<FragmentCollectionsBinding>(FragmentCollectionsBinding::inflate) {
-  private val viewModel by viewModels<CollectionsViewModel>(
-    factoryProducer = CollectionsViewModel::factory
-  )
+  private val viewModel by viewModel<CollectionsViewModel>()
 
   private val collectionUiItemAdapter by lazy(NONE) {
     CollectionUiItemAdapter(
@@ -45,13 +44,13 @@ class CollectionsFragment :
           && layoutManager.findLastVisibleItemPosition() + VISIBLE_THRESHOLD >= layoutManager.itemCount
         ) {
           Log.d(TAG, "loadNextPage...")
-          viewModel.loadNextPage()
+          viewModel.processIntent(CollectionsViewIntent.LoadNextPage)
         }
       }
     })
 
     binding.button.setOnClickListener {
-      viewModel.retry()
+      viewModel.processIntent(CollectionsViewIntent.Retry)
     }
 
     viewModel.uiStateLiveData.observe(viewLifecycleOwner) { uiState ->

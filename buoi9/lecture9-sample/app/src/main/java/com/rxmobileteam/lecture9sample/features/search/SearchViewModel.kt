@@ -3,7 +3,7 @@ package com.rxmobileteam.lecture9sample.features.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rxmobileteam.lecture9sample.features.feeds.collections.CollectionUiItem
+import com.rxmobileteam.lecture9sample.features.feeds.collections.presentation.CollectionUiItem
 import com.rxmobileteam.lecture9sample.features.search.repository.SearchRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
