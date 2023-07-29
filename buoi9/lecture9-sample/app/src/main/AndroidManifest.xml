@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".UnSplashApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,10 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Lecture9sample"
-        android:name=".UnSplashApplication"
         tools:targetApi="31">
         <activity
-            android:name=".navigation.DemoActivityNavigation"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +28,20 @@
         <activity
             android:name=".features.search.SearchActivity"
             android:exported="true" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="com.rxmobileteam.lecture9sample.initializer.KoinInitializer"
+                android:value="androidx.startup" />
+<!--            <meta-data-->
+<!--                android:name="com.rxmobileteam.lecture9sample.initializer.TimberInitializer"-->
+<!--                android:value="androidx.startup" />-->
+        </provider>
     </application>
 
 </manifest>

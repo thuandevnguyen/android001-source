@@ -18,17 +18,6 @@ class UnSplashApplication : Application() {
   }
 
   private fun initKoin() {
-    startKoin {
-      androidLogger(Level.ERROR)
-      androidContext(this@UnSplashApplication)
-      modules(
-        listOf(
-          networkModule,
-          repositoryModule,
-          viewModelModule,
-          sharePrefModule
-        )
-      )
-    }
+
   }
 }
